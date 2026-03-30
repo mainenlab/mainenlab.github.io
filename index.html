@@ -1167,7 +1167,22 @@ function renderFullTimeline() {
     labelEl.className = 'tl-label-row';
     labelEl.dataset.person = p.slug;
     if (selectedPerson === p.slug) labelEl.classList.add('selected');
-    labelEl.innerHTML = '<div style="text-align:right"><div class="ptl-name person-link" onclick="event.stopPropagation();showBio(\'' + p.slug + '\')">' + escHTML(p.name) + '</div><div class="ptl-role">' + escHTML(subtitle) + '</div></div>';
+    const labelInner = document.createElement('div');
+    labelInner.style.cssText = 'width:100%; padding-right:6px;';
+    const nameEl = document.createElement('div');
+    nameEl.className = 'ptl-name';
+    nameEl.style.cssText = 'text-align:right; padding-right:8px; width:100%;';
+    const nameText = document.createElement('span');
+    nameText.textContent = p.name;
+    nameText.className = 'person-link';
+    nameText.setAttribute('onclick', 'event.stopPropagation();showBio(\'' + p.slug + '\')');
+    nameEl.appendChild(nameText);
+    const roleEl = document.createElement('div');
+    roleEl.className = 'ptl-role';
+    roleEl.textContent = subtitle;
+    labelInner.appendChild(nameEl);
+    labelInner.appendChild(roleEl);
+    labelEl.appendChild(labelInner);
     labelEl.addEventListener('click', function() { selectPerson(p.slug); });
 
     const trackEl = document.createElement('div');
@@ -1199,7 +1214,14 @@ function renderFullTimeline() {
     bar.addEventListener('mousemove', positionTooltip);
     bar.addEventListener('mouseleave', function() { tooltip.classList.remove('visible'); });
 
+    const nowPct = ((currentYear - minYear) / totalYears) * 100;
+    const portraitThumb = document.createElement('img');
+    portraitThumb.src = 'images/portraits/' + p.slug + '-voxel.png';
+    portraitThumb.style.cssText = 'position:absolute; left:calc(' + nowPct + '% + 28px); top:50%; transform:translateY(-50%); width:22px; height:22px; image-rendering:pixelated; border-radius:3px; z-index:2;';
+    portraitThumb.onerror = function(){ this.style.display='none'; };
+    trackEl.appendChild(portraitThumb);
     trackEl.appendChild(bar);
+
     trackEl.addEventListener('click', function() { selectPerson(p.slug); });
 
     return { labelEl, trackEl };
