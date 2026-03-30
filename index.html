@@ -171,7 +171,9 @@ details[open] > .completed-toggle::before { transform: rotate(90deg); }
 .project-card:hover { box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
 .project-card.hidden { display: none; }
 
-.card-header { display: flex; justify-content: space-between; align-items: flex-start; cursor: pointer; }
+.card-header { display: flex; align-items: flex-start; gap: 12px; cursor: pointer; }
+.card-cover-thumb { width: 80px; height: 80px; image-rendering: pixelated; border-radius: 6px; flex-shrink: 0; }
+.card-header-text { flex: 1; min-width: 0; }
 .card-title { font-weight: 600; font-size: 0.95rem; }
 .card-meta { display: flex; align-items: center; gap: 0.6rem; margin-top: 0.3rem; }
 .card-span { font-size: 0.78rem; color: var(--muted); }
@@ -197,7 +199,6 @@ details[open] > .completed-toggle::before { transform: rotate(90deg); }
 }
 .card-detail.open { max-height: 3000px; }
 .card-detail-inner { padding-top: 0.75rem; border-top: 1px solid var(--border); margin-top: 0.75rem; }
-.card-cover { width: 120px; height: 120px; image-rendering: pixelated; border-radius: 6px; float: right; margin: 0 0 0.5rem 1rem; display: block; }
 .filter-pill-thumb { width: 16px; height: 16px; image-rendering: pixelated; border-radius: 2px; vertical-align: middle; margin-right: 3px; display: inline-block; }
 .card-description { font-size: 0.85rem; line-height: 1.6; margin-bottom: 0.75rem; }
 .card-description a { color: var(--accent); text-decoration: none; }
@@ -775,7 +776,8 @@ function makeProjectCard(p) {
 
   card.innerHTML =
     '<div class="card-header" onclick="this.parentElement.classList.toggle(\'expanded\');this.parentElement.querySelector(\'.card-detail\').classList.toggle(\'open\')">' +
-      '<div>' +
+      (p.cover ? '<img src="' + p.cover + '" class="card-cover-thumb" alt="" loading="lazy">' : '') +
+      '<div class="card-header-text">' +
         '<div class="card-title">' + escHTML(p.name) + '</div>' +
         '<div class="card-meta">' +
           (span ? '<span class="card-span">' + span + '</span>' : '') +
@@ -790,7 +792,6 @@ function makeProjectCard(p) {
     '</div>' +
     '<div class="card-detail">' +
       '<div class="card-detail-inner">' +
-        (p.cover ? '<img src="' + p.cover + '" class="card-cover" alt="" loading="lazy">' : '') +
         (p.description ? '<div class="card-description">' + p.description + '</div>' : '') +
         (pubListHTML ? '<ul class="card-pub-list">' + pubListHTML + '</ul>' : '') +
         (allPeople ? '<div class="card-all-people"><strong>People:</strong> ' + allPeople + '</div>' : '') +
